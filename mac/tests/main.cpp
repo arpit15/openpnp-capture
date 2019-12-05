@@ -184,6 +184,15 @@ int main(int argc, char*argv[])
         printf("Failed to get exposure limits!\n");
     }
 
+    if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_WHITEBALANCE, &emin, &emax, &edefault) == CAPRESULT_OK)
+    {
+        printf("White balance limits: %d .. %d (default=%d)\n", emin, emax, edefault);
+    }
+    else
+    {
+        printf("Failed to get white balance limits!\n");
+    }
+
     if (Cap_getProperty(ctx, streamID, CAPPROPID_EXPOSURE, &emin) == CAPRESULT_OK)
     {
         printf("Exposure: %d\n", emin);
@@ -204,10 +213,31 @@ int main(int argc, char*argv[])
     }
 
     //disable auto exposure, focus and white balance
-    //Cap_setAutoProperty(ctx, streamID, CAPPROPID_EXPOSURE, 0);
+    Cap_setAutoProperty(ctx, streamID, CAPPROPID_EXPOSURE, 0);
     //Cap_setAutoProperty(ctx, streamID, CAPPROPID_FOCUS, 0);
-    //Cap_setAutoProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 0);
+    Cap_setAutoProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 0);
     //Cap_setAutoProperty(ctx, streamID, CAPPROPID_GAIN, 0);
+
+    Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, 10);
+    Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 4000);
+
+    if (Cap_getProperty(ctx, streamID, CAPPROPID_EXPOSURE, &emin) == CAPRESULT_OK)
+    {
+        printf("Exposure: %d\n", emin);
+    }
+    else
+    {
+        printf("Failed to get exposure!\n");
+    }
+
+    if (Cap_getProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, &emin) == CAPRESULT_OK)
+    {
+        printf("White balance: %d\n", emin);
+    }
+    else
+    {
+        printf("Failed to get white balance!\n");
+    }
 
     std::vector<uint8_t> m_buffer;
     m_buffer.resize(finfo.width*finfo.height*3);
