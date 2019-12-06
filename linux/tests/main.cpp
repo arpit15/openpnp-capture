@@ -126,92 +126,96 @@ int main(int argc, char*argv[])
 
     //disable auto exposure, focus and white balance
     Cap_setAutoProperty(ctx, streamID, CAPPROPID_EXPOSURE, 0);
-    Cap_setAutoProperty(ctx, streamID, CAPPROPID_FOCUS, 0);
-    Cap_setAutoProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 1);
-    Cap_setAutoProperty(ctx, streamID, CAPPROPID_GAIN, 0);
+    // Cap_setAutoProperty(ctx, streamID, CAPPROPID_FOCUS, 0);
+    Cap_setAutoProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 0);
+    // Cap_setAutoProperty(ctx, streamID, CAPPROPID_GAIN, 0);
 
+    int32_t exposure = 10;
+    Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, exposure);
+    printf("Set exposure to %d\n", exposure);
+    // printf("Default exposure = %d\n",edefault);
     // set exposure in the middle of the range
-    int32_t exposure = 0;
-    int32_t exmax, exmin, edefault;
-    if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_EXPOSURE, 
-            &exmin, &exmax, &edefault) == CAPRESULT_OK)
-    {
-        exposure = (exmax + exmin) / 2;
-        Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, exposure);
-        printf("Set exposure to %d\n", exposure);
-        printf("Default exposure = %d\n",edefault);
-    }
-    else
-    {
-        printf("Could not get exposure limits.\n");
-    }
+    // int32_t exposure = 0;
+    // int32_t exmax, exmin, edefault;
+    // if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_EXPOSURE, 
+    //         &exmin, &exmax, &edefault) == CAPRESULT_OK)
+    // {
+    //     exposure = (exmax + exmin) / 2;
+    //     Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, exposure);
+    //     printf("Set exposure to %d\n", exposure);
+    //     printf("Default exposure = %d\n",edefault);
+    // }
+    // else
+    // {
+    //     printf("Could not get exposure limits.\n");
+    // }
 
     // set focus in the middle of the range
-    int32_t focus = 0;
-    int32_t fomax, fomin, fodefault;
-    if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_FOCUS, 
-            &fomin, &fomax, &fodefault) == CAPRESULT_OK)
-    {
-        focus = (fomax + fomin) / 2;
-        Cap_setProperty(ctx, streamID, CAPPROPID_FOCUS, focus);
-        printf("Set focus to %d\n", focus);
-        printf("Default focus = %d\n",fodefault);
-    }
-    else
-    {
-        printf("Could not get focus limits.\n");
-    }
+    // int32_t focus = 0;
+    // int32_t fomax, fomin, fodefault;
+    // if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_FOCUS, 
+    //         &fomin, &fomax, &fodefault) == CAPRESULT_OK)
+    // {
+    //     focus = (fomax + fomin) / 2;
+    //     Cap_setProperty(ctx, streamID, CAPPROPID_FOCUS, focus);
+    //     printf("Set focus to %d\n", focus);
+    //     printf("Default focus = %d\n",fodefault);
+    // }
+    // else
+    // {
+    //     printf("Could not get focus limits.\n");
+    // }
 
     // set zoom in the middle of the range
     int32_t zoom = 0;
-    int32_t zomax, zomin, zodefault;
-    if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_ZOOM, 
-            &zomin, &zomax, &zodefault) == CAPRESULT_OK)
-    {
-        zoom = zomin;
-        Cap_setProperty(ctx, streamID, CAPPROPID_ZOOM, zoom);
-        printf("Set zoom to %d\n", zoom);
-        printf("Default focus = %d\n",zodefault);
-    }
-    else
-    {
-        printf("Could not get zoom limits.\n");
-    }
+    // int32_t zomax, zomin, zodefault;
+    // if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_ZOOM, 
+    //         &zomin, &zomax, &zodefault) == CAPRESULT_OK)
+    // {
+    //     zoom = zomin;
+    //     Cap_setProperty(ctx, streamID, CAPPROPID_ZOOM, zoom);
+    //     printf("Set zoom to %d\n", zoom);
+    //     printf("Default focus = %d\n",zodefault);
+    // }
+    // else
+    // {
+    //     printf("Could not get zoom limits.\n");
+    // }
 
     // set white balance in the middle of the range
-    int32_t wbalance = 0;
-    int32_t wbmax, wbmin, wbdefault;
-    int32_t wbstep = 0;
-    if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_WHITEBALANCE, 
-            &wbmin, &wbmax, &wbdefault) == CAPRESULT_OK)
-    {
-        wbalance = (wbmax+wbmin)/2;
-        wbstep = (wbmax-wbmin) / 20;
-        Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
-        printf("Set white balance to %d\n", wbalance);
-        printf("Default white balance = %d\n",wbdefault);
-    }
-    else
-    {
-        printf("Could not get white balance limits.\n");
-    }
+    // int32_t wbalance = 0;
+    // int32_t wbmax, wbmin, wbdefault;
+    // int32_t wbstep = 0;
+    // if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_WHITEBALANCE, 
+    //         &wbmin, &wbmax, &wbdefault) == CAPRESULT_OK)
+    // {
+    //     wbalance = (wbmax+wbmin)/2;
+    //     wbstep = (wbmax-wbmin) / 20;
+    //     Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
+    //     printf("Set white balance to %d\n", wbalance);
+    //     printf("Default white balance = %d\n",wbdefault);
+    // }
+    // else
+    // {
+    //     printf("Could not get white balance limits.\n");
+    // }
 
     // set gain in the middle of the range
-    int32_t gain = 0;
-    int32_t gmax, gmin, gdefault;
-    int32_t gstep = 0;
-    if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_GAIN, 
-            &gmin, &gmax, &gdefault) == CAPRESULT_OK)
-    {
-        gstep = (gmax-gmin) / 20;
-        Cap_setProperty(ctx, streamID, CAPPROPID_GAIN, gain);
-        printf("Set gain to %d (min=%d max=%d)\n", gain, gmin, gmax);
-        printf("Default gain = %d\n",gdefault);
-    }
-    else
-    {
-        printf("Could not get gain limits.\n");
-    }
+    // int32_t gain = 0;
+    // int32_t gmax, gmin, gdefault;
+    // int32_t gstep = 0;
+    // if (Cap_getPropertyLimits(ctx, streamID, CAPPROPID_GAIN, 
+    //         &gmin, &gmax, &gdefault) == CAPRESULT_OK)
+    // {
+    //     gstep = (gmax-gmin) / 20;
+    //     Cap_setProperty(ctx, streamID, CAPPROPID_GAIN, gain);
+    //     printf("Set gain to %d (min=%d max=%d)\n", gain, gmin, gmax);
+    //     printf("Default gain = %d\n",gdefault);
+    // }
+    // else
+    // {
+    //     printf("Could not get gain limits.\n");
+    // }
 
 
     std::vector<uint8_t> m_buffer;
@@ -239,22 +243,22 @@ int main(int argc, char*argv[])
             v = 0;
             Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, v);
             break; 
-        case 'f':
-            Cap_setProperty(ctx, streamID, CAPPROPID_FOCUS, ++focus);
-            printf("focus = %d     \r", focus);
-            break;
-        case 'g':
-            Cap_setProperty(ctx, streamID, CAPPROPID_FOCUS, --focus);
-            printf("focus = %d     \r", focus);
-            break;
-        case 'z':
-            Cap_setProperty(ctx, streamID, CAPPROPID_ZOOM, ++zoom);
-            printf("zoom = %d     \r", zoom);
-            break;
-        case 'x':
-            Cap_setProperty(ctx, streamID, CAPPROPID_ZOOM, --zoom);
-            printf("zoom = %d     \r", zoom);
-            break;
+        // case 'f':
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_FOCUS, ++focus);
+        //     printf("focus = %d     \r", focus);
+        //     break;
+        // case 'g':
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_FOCUS, --focus);
+        //     printf("focus = %d     \r", focus);
+        //     break;
+        // case 'z':
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_ZOOM, ++zoom);
+        //     printf("zoom = %d     \r", zoom);
+        //     break;
+        // case 'x':
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_ZOOM, --zoom);
+        //     printf("zoom = %d     \r", zoom);
+        //     break;
         case '3':
             //Cap_setFrameRate(ctx, streamID, --fps);
             //printf("framerate = %d\n", fps);
@@ -263,26 +267,26 @@ int main(int argc, char*argv[])
             //Cap_setFrameRate(ctx, streamID, ++fps);
             //printf("framerate = %d\n", fps);
             break;
-        case '[':
-            wbalance -= wbstep;
-            Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
-            printf("wbal = %d     \r", wbalance);
-            break;              
-        case ']':
-            wbalance += wbstep; 
-            Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
-            printf("wbal = %d     \r", wbalance);
-            break;  
-        case 'a':
-            gain -= gstep;
-            Cap_setProperty(ctx, streamID, CAPPROPID_GAIN, gain);
-            printf("gain = %d     \r", gain);
-            break;              
-        case 's':
-            gain += gstep;
-            Cap_setProperty(ctx, streamID, CAPPROPID_GAIN, gain);
-            printf("gain = %d     \r", gain);
-            break;
+        // case '[':
+        //     wbalance -= wbstep;
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
+        //     printf("wbal = %d     \r", wbalance);
+        //     break;              
+        // case ']':
+        //     wbalance += wbstep; 
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
+        //     printf("wbal = %d     \r", wbalance);
+        //     break;  
+        // case 'a':
+        //     gain -= gstep;
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_GAIN, gain);
+        //     printf("gain = %d     \r", gain);
+        //     break;              
+        // case 's':
+        //     gain += gstep;
+        //     Cap_setProperty(ctx, streamID, CAPPROPID_GAIN, gain);
+        //     printf("gain = %d     \r", gain);
+        //     break;
         case 'p':
             printf("Estimating frame rate..\n");
             estimateFrameRate(ctx, streamID);
