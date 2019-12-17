@@ -80,7 +80,7 @@ IF (WIN32)
     add_library(openpnp-capture SHARED ${SOURCE})
 
     # add windows-specific test application
-    add_subdirectory(win/tests)
+#     add_subdirectory(win/tests)
 
 ELSEIF(APPLE)
     # set the platform identification string
@@ -109,7 +109,7 @@ ELSEIF(APPLE)
         )
 
     # add mac specific test application
-    add_subdirectory(mac/tests)
+#     add_subdirectory(mac/tests)
 
 ELSEIF(UNIX)
 
@@ -149,7 +149,30 @@ ELSEIF(UNIX)
     target_link_libraries(openpnp-capture turbojpeg-static)
 
     # add linux-specific test application
-    add_subdirectory(linux/tests)
+#     add_subdirectory(linux/tests)
 
 ENDIF()
 
+# install
+target_include_directories(openpnp-capture 
+        PUBLIC 
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/common>
+            $<INSTALL_INTERFACE:include/openpnp-capture/include>
+            $<INSTALL_INTERFACE:include/openpnp-capture/common>)
+
+install(TARGETS openpnp-capture
+    EXPORT openpnp-capture
+    PUBLIC_HEADER 
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/openpnp-capture)
+
+install(DIRECTORY $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/common>
+            DESTINATION include/openpnp-capture
+            FILES_MATCHING PATTERN "*.h")
+
+install(EXPORT openpnp-capture
+  NAMESPACE openpnp-capture::
+  FILE openpnp-captureConfig.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/openpnp-capture
+)
