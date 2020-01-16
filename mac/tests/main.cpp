@@ -12,7 +12,7 @@
 
 #include "openpnp-capture.h"
 #include "../common/context.h"
-#include "../uvcctrl.h"
+// #include "../uvcctrl.h"
 
 bool writeBufferAsPPM(uint32_t frameNum, uint32_t width, uint32_t height, const uint8_t *bufferPtr, size_t bytes)
 {
@@ -212,13 +212,37 @@ int main(int argc, char*argv[])
         printf("Failed to get auto exposure!\n");
     }
 
+    int32_t luma_gain;
+    if (Cap_getProperty(ctx, streamID, CAPPROPID_CONTRAST, &luma_gain) == CAPRESULT_OK)
+    {
+        printf("luma gain: %d\n", vvv);
+    }
+    else
+    {
+        printf("Failed to get luma gain!\n");
+    }
+
+    int32_t chroma_gain;
+    if (Cap_getProperty(ctx, streamID, CAPPROPID_SATURATION, &chroma_gain) == CAPRESULT_OK)
+    {
+        printf("chroma gain: %d\n", vvv);
+    }
+    else
+    {
+        printf("Failed to get chroma gain!\n");
+    }
+
+
     //disable auto exposure, focus and white balance
     Cap_setAutoProperty(ctx, streamID, CAPPROPID_EXPOSURE, 0);
     //Cap_setAutoProperty(ctx, streamID, CAPPROPID_FOCUS, 0);
     Cap_setAutoProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 0);
     //Cap_setAutoProperty(ctx, streamID, CAPPROPID_GAIN, 0);
 
-    Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, 10);
+    Cap_setAutoProperty(ctx, streamID, CAPPROPID_BACKLIGHTCOMP, 0);
+
+    Cap_setProperty(ctx, streamID, CAPPROPID_BACKLIGHTCOMP, 0);
+    Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, 7);
     Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, 4000);
 
     if (Cap_getProperty(ctx, streamID, CAPPROPID_EXPOSURE, &emin) == CAPRESULT_OK)
@@ -239,20 +263,67 @@ int main(int argc, char*argv[])
         printf("Failed to get white balance!\n");
     }
 
+    // std::vector<uint8_t> m_buffer;
+    // m_buffer.resize(finfo.width*finfo.height*3);
+    // uint32_t counter = 0;
+    // while(counter < 30)
+    // {
+    //     if (Cap_hasNewFrame(ctx, streamID) == 1)
+    //     {
+    //         Cap_captureFrame(ctx, streamID, &m_buffer[0], m_buffer.size());
+    //         writeBufferAsPPM(counter, finfo.width, finfo.height, &m_buffer[0], m_buffer.size());
+    //         counter++;
+    //         printf("Captured frames: %d\r", counter);
+    //         fflush(stdout);
+    //     }
+    // };    
+
     std::vector<uint8_t> m_buffer;
     m_buffer.resize(finfo.width*finfo.height*3);
-    uint32_t counter = 0;
-    while(counter < 30)
+    char c = 0;
+    int32_t wbalance = 4000;
+    int32_t wbstep = 500;
+    int32_t v = 0;
+    uint32_t frameWriteCounter=0; 
+    while((c != 'q') && (c != 'Q'))
     {
-        if (Cap_hasNewFrame(ctx, streamID) == 1)
+        c = getchar();
+        switch(c)
         {
-            Cap_captureFrame(ctx, streamID, &m_buffer[0], m_buffer.size());
-            writeBufferAsPPM(counter, finfo.width, finfo.height, &m_buffer[0], m_buffer.size());
-            counter++;
-            printf("Captured frames: %d\r", counter);
-            fflush(stdout);
+        case '+':
+            printf("+");
+            Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, ++v);
+            break;
+        case '-':
+            printf("-");
+            Cap_setProperty(ctx, streamID, CAPPROPID_EXPOSURE, --v);
+            break;
+        case '[':
+            wbalance -= wbstep;
+            Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
+            printf("wbal = %d     \r", wbalance);
+            break;              
+        case ']':
+            wbalance += wbstep; 
+            Cap_setProperty(ctx, streamID, CAPPROPID_WHITEBALANCE, wbalance);
+            printf("wbal = %d     \r", wbalance);
+            break;
+        case 'w':
+            if (Cap_captureFrame(ctx, streamID, &m_buffer[0], m_buffer.size()) == CAPRESULT_OK)
+            {
+                if (writeBufferAsPPM(frameWriteCounter, 
+                    finfo.width,
+                    finfo.height,
+                    &m_buffer[0],
+                    m_buffer.size()))
+                {
+                    printf("Written frame to frame_%d.ppm\n", frameWriteCounter++);
+                    // fflush(stdout);
+                }
+            }
+            break; 
         }
-    };    
+    }
 
     printf("\n\n");
     Cap_closeStream(ctx, streamID);
